@@ -10,7 +10,7 @@
 
   <groupId>org.togglz</groupId>
   <artifactId>togglz-project</artifactId>
-  <version>2.6.1.Final</version>
+  <version>2.6.1.Final.Careem</version>
   <packaging>pom</packaging>
 
   <name>Togglz</name>
@@ -28,7 +28,7 @@
     <connection>scm:git:git@github.com:togglz/togglz.git</connection>
     <developerConnection>scm:git:git@github.com:togglz/togglz.git</developerConnection>
     <url>https://github.com/togglz/togglz</url>
-    <tag>2.6.1.Final</tag>
+    <tag>2.6.1.Final.Careem</tag>
   </scm>
 
   <issueManagement>
@@ -196,7 +196,7 @@
     <module>cassandra</module>
     <module>hazelcast</module>
     <module>zookeeper</module>
-    <module>dynamodb</module>
+<!--    <module>dynamodb</module>-->
     <module>amazon-s3</module>
     <module>benchmarks</module>
     <module>spring-mobile</module>
