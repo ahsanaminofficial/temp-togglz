@@ -94,59 +94,9 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-appengine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-mongodb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-archaius</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-cassandra</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-hazelcast</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-zookeeper</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-dynamodb</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-mobile</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-cloud-datastore</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-amazon-s3</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-slack</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-redis</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <!-- Authentication Integration -->
     <dependency>
       <groupId>org.togglz</groupId>
@@ -156,11 +106,6 @@
       <groupId>org.togglz</groupId>
       <artifactId>togglz-shiro</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-deltaspike</artifactId>
-    </dependency>
-
     <!-- Testing support -->
     <dependency>
       <groupId>org.togglz</groupId>
@@ -184,13 +129,6 @@
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.togglz</groupId>
-          <artifactId>togglz-microprofile-config</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
     </profile>
   </profiles>
 </project>
