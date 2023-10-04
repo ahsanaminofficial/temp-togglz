@@ -9,7 +9,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepositoryTest;
 import org.togglz.core.util.NamedFeature;
-
+import java.util.Collections;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -32,6 +32,15 @@ public class GalileoStateRepositoryTest {
                         "    \"FEATURE_ENABLED\": 0,\n" +
                         "    \"STRATEGY_ID\": \"NA\",\n" +
                         "    \"STRATEGY_PARAMS\": \"{Params: { \\\"AED\\\": { \\\"max\\\": 100, \\\"min\\\": 2}}}\"\n" +
+                        "}");
+
+        HashMap<String, Object> context3 = new HashMap<String, Object>(){{put("name", "togglz/business_profile_flag_booking_create_core");}};
+        Mockito.when(galileoMock.getString("togglz/business_profile_flag_booking_create_core",context3, "failed to fetch"))
+                .thenReturn("{\n" +
+                        "    \"FEATURE_NAME\": \"SOL_BO_NO_OF_PASSENGER_FIELD\",\n" +
+                        "    \"FEATURE_ENABLED\": 1,\n" +
+                        "    \"STRATEGY_ID\": null,\n" +
+                        "    \"STRATEGY_PARAMS\": null\n" +
                         "}");
     }
 
@@ -64,6 +73,30 @@ public class GalileoStateRepositoryTest {
         repository = new GalileoStateRepository(this.galileoMock);
         assertNotNull(repository.getFeatureState(new NamedFeature("cash_in_card_top_up_currency_limits")).getStrategyId());
         Mockito.verify(this.galileoMock).getString("togglz/cash_in_card_top_up_currency_limits",new HashMap<String, Object>(){{put("name", "togglz/cash_in_card_top_up_currency_limits");}}, "failed to fetch");
+        Mockito.verifyNoMoreInteractions(galileoMock);
+    }
+
+    @Test
+    public void testStrategyParamsNested() throws InterruptedException {
+        repository = new GalileoStateRepository(this.galileoMock);
+        assertEquals("{ \"AED\": { \"max\": 100, \"min\": 2}}}",repository.getFeatureState(new NamedFeature("cash_in_card_top_up_currency_limits")).getParameterMap().get("{Params"));
+        Mockito.verify(this.galileoMock).getString("togglz/cash_in_card_top_up_currency_limits",new HashMap<String, Object>(){{put("name", "togglz/cash_in_card_top_up_currency_limits");}}, "failed to fetch");
+        Mockito.verifyNoMoreInteractions(galileoMock);
+    }
+
+    @Test
+    public void testStrategyParamsNotNested() throws InterruptedException {
+        repository = new GalileoStateRepository(this.galileoMock);
+        assertEquals("100",repository.getFeatureState(new NamedFeature("sol_bo_no_of_passenger_field")).getParameterMap().get("rate"));
+        Mockito.verify(this.galileoMock).getString("togglz/sol_bo_no_of_passenger_field",new HashMap<String, Object>(){{put("name", "togglz/sol_bo_no_of_passenger_field");}}, "failed to fetch");
+        Mockito.verifyNoMoreInteractions(galileoMock);
+    }
+
+    @Test
+    public void testStrategyParamsNull() throws InterruptedException {
+        repository = new GalileoStateRepository(this.galileoMock);
+        assertEquals(true,repository.getFeatureState(new NamedFeature("business_profile_flag_booking_create_core")).getParameterMap().isEmpty());
+        Mockito.verify(this.galileoMock).getString("togglz/business_profile_flag_booking_create_core",new HashMap<String, Object>(){{put("name", "togglz/business_profile_flag_booking_create_core");}}, "failed to fetch");
         Mockito.verifyNoMoreInteractions(galileoMock);
     }
 
