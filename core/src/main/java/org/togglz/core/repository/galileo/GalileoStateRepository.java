@@ -19,6 +19,7 @@ import org.togglz.core.util.Strings;
 import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.repository.util.MapSerializer;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class GalileoStateRepository implements StateRepository {
 
@@ -41,7 +42,7 @@ public class GalileoStateRepository implements StateRepository {
         HashMap<String, Object> context = new HashMap<String, Object>(){{put("name", inputVariable);}};
         String value = this.galileo.getString(inputVariable, context, "failed to fetch");
 
-        if (value == "failed to fetch") {
+        if (Objects.equals(value, "failed to fetch")) {
             log.warn("Could not fetch the value of " + inputVariable);
             return null;
         }
@@ -50,9 +51,9 @@ public class GalileoStateRepository implements StateRepository {
             JSONParser parser = new JSONParser();
             Map<String, Object> jsonMap = (Map<String, Object>) parser.parse(value);
 
-
             if(jsonMap.containsKey("FEATURE_ENABLED")) {
-                boolean enabled = (long) jsonMap.get("FEATURE_ENABLED") > 0;
+
+                boolean enabled = (long)jsonMap.get("FEATURE_ENABLED") > 0;
 
                 FeatureState state = new FeatureState(feature, enabled);
 
@@ -66,16 +67,27 @@ public class GalileoStateRepository implements StateRepository {
                 if(jsonMap.containsKey("STRATEGY_PARAMS")) {
                     String paramData = (String) jsonMap.get("STRATEGY_PARAMS");
                     if (Strings.isNotBlank(paramData)) {
+                        try {
 
-                        Map<String, String> params = serializer.deserialize(paramData);
-                        for (Entry<String, String> param : params.entrySet()) {
-                            state.setParameter(param.getKey(), param.getValue());
+                            Map<String, String> params = serializer.deserialize(paramData);
+
+                            for (Entry<String, String> param : params.entrySet()) {
+                                state.setParameter(param.getKey(), param.getValue());
+                            }
+                        } catch(Exception e) {
+                            e.printStackTrace();
                         }
 
 //                        try {
-//                            Map<String, Object> strategy_params = (Map<String, Object>) parser.parse(paramData);
+//                            System.out.println("------CHECKING PARAM DATA---------");
 //
-//                            for (Map.Entry<String, Object> entry : strategy_params.entrySet()) {
+//                            System.out.println(paramData);
+//                            System.out.println(paramData.getClass().getName());
+//
+//                            Map<String, String> strategy_params = (Map<String, String>) parser.parse(paramData);
+//                            System.out.println("HERE ARE PARAMS");
+//                            System.out.println(strategy_params);
+//                            for (Map.Entry<String, String> entry : strategy_params.entrySet()) {
 //                                state.setParameter(entry.getKey(), (String) entry.getValue());
 //                            }
 //                        }
@@ -92,7 +104,6 @@ public class GalileoStateRepository implements StateRepository {
         }
         catch (ParseException e) {
             log.warn("Cannot parse the return value of variable: " + inputVariable);
-            e.printStackTrace();
         }
 
         return null;

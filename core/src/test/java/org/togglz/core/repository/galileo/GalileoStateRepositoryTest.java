@@ -27,7 +27,12 @@ public class GalileoStateRepositoryTest {
 
         HashMap<String, Object> context2 = new HashMap<String, Object>(){{put("name", "togglz/cash_in_card_top_up_currency_limits");}};
         Mockito.when(galileoMock.getString("togglz/cash_in_card_top_up_currency_limits",context2, "failed to fetch"))
-                .thenReturn("{ \"FEATURE_NAME\": \"CASH_IN_CARD_TOP_UP_CURRENCY_LIMITS\", \"FEATURE_ENABLED\": 0, \"STRATEGY_ID\": \"NA\", \"STRATEGY_PARAMS\":\"rate 100\"}");
+                .thenReturn("{\n" +
+                        "    \"FEATURE_NAME\": \"CASH_IN_CARD_TOP_UP_CURRENCY_LIMITS\",\n" +
+                        "    \"FEATURE_ENABLED\": 0,\n" +
+                        "    \"STRATEGY_ID\": \"NA\",\n" +
+                        "    \"STRATEGY_PARAMS\": \"{Params: { \\\"AED\\\": { \\\"max\\\": 100, \\\"min\\\": 2}}}\"\n" +
+                        "}");
     }
 
     @Test
