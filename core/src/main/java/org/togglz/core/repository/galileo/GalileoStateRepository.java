@@ -16,14 +16,21 @@ import com.careem.galileo.sdk.Galileo;
 import java.util.HashMap;
 import org.togglz.core.util.Strings;
 
+import org.togglz.core.repository.util.DefaultMapSerializer;
+import org.togglz.core.repository.util.MapSerializer;
+import java.util.Map.Entry;
+
 public class GalileoStateRepository implements StateRepository {
 
     protected final Galileo galileo;
 
     protected final Log log = LogFactory.getLog(GalileoStateRepository.class);
 
+    protected final MapSerializer serializer;
+
     public GalileoStateRepository(Galileo galileoObj) {
         this.galileo = galileoObj;
+        this.serializer = DefaultMapSerializer.multiline();
     }
 
     @Override
@@ -59,17 +66,23 @@ public class GalileoStateRepository implements StateRepository {
                 if(jsonMap.containsKey("STRATEGY_PARAMS")) {
                     String paramData = (String) jsonMap.get("STRATEGY_PARAMS");
                     if (Strings.isNotBlank(paramData)) {
-                        try {
-                            Map<String, Object> strategy_params = (Map<String, Object>) parser.parse(paramData);
 
-                            for (Map.Entry<String, Object> entry : strategy_params.entrySet()) {
-                                state.setParameter(entry.getKey(), (String) entry.getValue());
-                            }
+                        Map<String, String> params = serializer.deserialize(paramData);
+                        for (Entry<String, String> param : params.entrySet()) {
+                            state.setParameter(param.getKey(), param.getValue());
                         }
-                        catch(ParseException e) {
-                            log.warn("Cannot parse strategy params for variable: " + inputVariable);
-                            e.printStackTrace();
-                        }
+
+//                        try {
+//                            Map<String, Object> strategy_params = (Map<String, Object>) parser.parse(paramData);
+//
+//                            for (Map.Entry<String, Object> entry : strategy_params.entrySet()) {
+//                                state.setParameter(entry.getKey(), (String) entry.getValue());
+//                            }
+//                        }
+//                        catch(ParseException e) {
+//                            log.warn("Cannot parse strategy params for variable: " + inputVariable);
+//                            e.printStackTrace();
+//                        }
                     }
                 }
 
@@ -78,11 +91,10 @@ public class GalileoStateRepository implements StateRepository {
 
         }
         catch (ParseException e) {
-            log.warn("Cannot parse strategy params for variable: " + inputVariable);
+            log.warn("Cannot parse the return value of variable: " + inputVariable);
             e.printStackTrace();
         }
 
-        log.warn("Cannot parse the return value of variable: " + inputVariable);
         return null;
     }
 
