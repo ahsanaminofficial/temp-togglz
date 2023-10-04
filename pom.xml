@@ -24,17 +24,6 @@
     </license>
   </licenses>
 
-  <scm>
-    <connection>scm:git:git@github.com:togglz/togglz.git</connection>
-    <developerConnection>scm:git:git@github.com:togglz/togglz.git</developerConnection>
-    <url>https://github.com/togglz/togglz</url>
-    <tag>2.6.1.Final.Careem</tag>
-  </scm>
-
-  <issueManagement>
-    <system>github</system>
-    <url>http://github.com/togglz/togglz/issues</url>
-  </issueManagement>
 
   <properties>
 
@@ -182,26 +171,13 @@
     <module>spring-web</module>
     <module>spring-security</module>
     <module>spring-boot</module>
-    <module>deltaspike</module>
     <module>shiro</module>
     <module>jsf</module>
     <module>jsp</module>
-    <module>appengine</module>
-    <module>cloud-datastore</module>
-    <module>archaius</module>
-    <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
     <module>distribution</module>
-    <module>cassandra</module>
-    <module>hazelcast</module>
-    <module>zookeeper</module>
-    <module>dynamodb</module>
-    <module>amazon-s3</module>
-    <module>benchmarks</module>
     <module>spring-mobile</module>
-    <module>slack</module>
-    <module>redis</module>
   </modules>
 
   <developers>
@@ -310,10 +286,6 @@
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
-      <modules>
-        <module>microprofile-config</module>
-        <module>junit5</module>
-      </modules>
     </profile>
 
   </profiles>
@@ -400,18 +372,6 @@
 
       <dependency>
         <groupId>org.togglz</groupId>
-        <artifactId>togglz-archaius</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-mongodb</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
         <artifactId>togglz-testing</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -425,36 +385,6 @@
       <dependency>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-junit</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-cassandra</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-hazelcast</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-redis</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-zookeeper</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-benchmarks</artifactId>
         <version>${project.version}</version>
       </dependency>
 
