@@ -78,7 +78,7 @@ public class GalileoStateRepository implements StateRepository {
 
         }
         catch (ParseException e) {
-            log.warn("Cannot parse strategy params for variable: " + inputVariable);
+            log.warn("Cannot parse json for variable: " + inputVariable);
             e.printStackTrace();
         }
 
