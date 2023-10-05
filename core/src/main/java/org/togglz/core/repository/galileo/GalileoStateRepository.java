@@ -1,74 +1,74 @@
 package org.togglz.core.repository.galileo;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.util.Map;
-
+import com.careem.galileo.sdk.Galileo;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.togglz.core.Feature;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
-
-import com.careem.galileo.sdk.Galileo;
+import org.togglz.core.repository.util.DefaultMapSerializer;
+import org.togglz.core.repository.util.MapSerializer;
+import org.togglz.core.util.Strings;
 
 import java.util.HashMap;
-import org.togglz.core.util.Strings;
+import java.util.Map;
 
 public class GalileoStateRepository implements StateRepository {
 
     protected final Galileo galileo;
+    protected final MapSerializer serializer;
 
     protected final Log log = LogFactory.getLog(GalileoStateRepository.class);
 
-    public GalileoStateRepository(Galileo galileoObj) {
-        this.galileo = galileoObj;
+    protected final String disabledFeature = "{\"FEATURE_ENABLED\": 0}";
+
+    public GalileoStateRepository(Galileo galileo) {
+        this.galileo = galileo;
+        this.serializer = DefaultMapSerializer.multiline();
+
     }
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
 
+        FeatureState disabledDefaultState = new FeatureState(feature, false);
+
         String inputVariable = "togglz/" + feature.name().toLowerCase();
 
-        HashMap<String, Object> context = new HashMap<String, Object>(){{put("name", inputVariable);}};
-        String value = this.galileo.getString(inputVariable, context, "failed to fetch");
+        HashMap<String, Object> context = new HashMap<String, Object>() {
+        };
+        String value = this.galileo.getString(inputVariable, context, disabledFeature);
 
-        if (value == "failed to fetch") {
+        if (value == null || value.isEmpty()){
             log.warn("Could not fetch the value of " + inputVariable);
-            return null;
+            return disabledDefaultState;
         }
 
         try {
-            JSONParser parser = new JSONParser();
-            Map<String, Object> jsonMap = (Map<String, Object>) parser.parse(value);
+            JsonObject jsonObject = JsonParser.parseString(value).getAsJsonObject();
 
-
-            if(jsonMap.containsKey("FEATURE_ENABLED")) {
-                boolean enabled = (long) jsonMap.get("FEATURE_ENABLED") > 0;
+            if (jsonObject.has("FEATURE_ENABLED")) {
+                boolean enabled = jsonObject.get("FEATURE_ENABLED").getAsInt() > 0;
 
                 FeatureState state = new FeatureState(feature, enabled);
 
-                if(jsonMap.containsKey("STRATEGY_ID")) {
-                    String strategyId = (String) jsonMap.get("STRATEGY_ID");
+                if (jsonObject.has("STRATEGY_ID") && !jsonObject.get("STRATEGY_ID").isJsonNull()) {
+                    String strategyId = jsonObject.get("STRATEGY_ID").getAsString();
                     if (Strings.isNotBlank(strategyId)) {
                         state.setStrategyId(strategyId.trim());
                     }
                 }
 
-                if(jsonMap.containsKey("STRATEGY_PARAMS")) {
-                    String paramData = (String) jsonMap.get("STRATEGY_PARAMS");
+                if (jsonObject.has("STRATEGY_PARAMS") && !jsonObject.get("STRATEGY_PARAMS").isJsonNull()) {
+                    String paramData = jsonObject.get("STRATEGY_PARAMS").getAsString();
                     if (Strings.isNotBlank(paramData)) {
-                        try {
-                            Map<String, Object> strategy_params = (Map<String, Object>) parser.parse(paramData);
-
-                            for (Map.Entry<String, Object> entry : strategy_params.entrySet()) {
-                                state.setParameter(entry.getKey(), (String) entry.getValue());
-                            }
-                        }
-                        catch(ParseException e) {
-                            log.warn("Cannot parse strategy params for variable: " + inputVariable);
-                            e.printStackTrace();
+                        Map<String, String> params = serializer.deserialize(paramData);
+                        for (Map.Entry<String, String> param : params.entrySet()) {
+                            state.setParameter(param.getKey(), param.getValue());
                         }
                     }
                 }
@@ -76,16 +76,17 @@ public class GalileoStateRepository implements StateRepository {
                 return state;
             }
 
-        }
-        catch (ParseException e) {
-            log.warn("Cannot parse strategy params for variable: " + inputVariable);
-            e.printStackTrace();
+        } catch (JsonSyntaxException | UnsupportedOperationException e) {
+            log.error("Cannot parse json data for feature: " + inputVariable, e);
+            return disabledDefaultState;
         }
 
-        log.warn("Cannot parse the return value of variable: " + inputVariable);
-        return null;
+        log.warn("Cannot parse the response from variable: " + inputVariable);
+        return disabledDefaultState;
     }
 
     @Override
-    public void setFeatureState(FeatureState featureState) {}
+    public void setFeatureState(FeatureState featureState) {
+        log.warn("Set feature is not supported");
+    }
 }
