@@ -29,7 +29,6 @@ public class GalileoStateRepository implements StateRepository {
     public GalileoStateRepository(Galileo galileo) {
         this.galileo = galileo;
         this.serializer = DefaultMapSerializer.multiline();
-
     }
 
     @Override
@@ -43,7 +42,8 @@ public class GalileoStateRepository implements StateRepository {
         };
         String value = this.galileo.getString(inputVariable, context, disabledFeature);
 
-        if (value == null || value.isEmpty()){
+        if (value == null || value.isEmpty()) {
+
             log.warn("Could not fetch the value of " + inputVariable);
             return disabledDefaultState;
         }
@@ -71,11 +71,10 @@ public class GalileoStateRepository implements StateRepository {
                             state.setParameter(param.getKey(), param.getValue());
                         }
                     }
+
+                    return state;
                 }
-
-                return state;
             }
-
         } catch (JsonSyntaxException | UnsupportedOperationException e) {
             log.error("Cannot parse json data for feature: " + inputVariable, e);
             return disabledDefaultState;
@@ -83,6 +82,7 @@ public class GalileoStateRepository implements StateRepository {
 
         log.warn("Cannot parse the response from variable: " + inputVariable);
         return disabledDefaultState;
+
     }
 
     @Override

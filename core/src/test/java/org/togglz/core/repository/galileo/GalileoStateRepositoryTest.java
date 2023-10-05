@@ -11,6 +11,7 @@ import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Strings;
 
+
 import static org.junit.Assert.*;
 
 public class GalileoStateRepositoryTest {
@@ -24,11 +25,10 @@ public class GalileoStateRepositoryTest {
         this.repository = new GalileoStateRepository(galileoMock);
 
 
-     }
+    }
 
     @Test
     public void testGalileoFeatureRetrieval() {
-
 
 
         // Check features
@@ -38,7 +38,7 @@ public class GalileoStateRepositoryTest {
         assertTrue(repository.getFeatureState(solBoNoOfPassengerField).isEnabled()); //Checks FEATURE_ENABLED in json
         assertNull(repository.getFeatureState(solBoNoOfPassengerField).getStrategyId());
         assertTrue(Strings.isEmpty(repository.getFeatureState(solBoNoOfPassengerField).getStrategyId()));
-        assertEquals("Expected rate 100", "100",repository.getFeatureState(solBoNoOfPassengerField).getParameter("rate"));
+        assertEquals("Expected rate 100", "100", repository.getFeatureState(solBoNoOfPassengerField).getParameter("rate"));
 
         // Feature with params
         Mockito.when(galileoMock.getString(Mockito.eq("togglz/cash_in_card_top_up_currency_limits"), Mockito.anyObject(), Mockito.anyString()))
@@ -68,7 +68,6 @@ public class GalileoStateRepositoryTest {
 
         Feature invalidJson = new NamedFeature("INVALID_JSON");
         assertFalse(repository.getFeatureState(invalidJson).isEnabled());
-
 
         Mockito.when(galileoMock.getString(Mockito.eq("togglz/invalid_feature_data"), Mockito.anyObject(), Mockito.anyString()))
                 .thenReturn("{\"FEATURE_NAME\": \"INVALID_FEATURE_DATA\"}");
