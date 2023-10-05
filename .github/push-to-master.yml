@@ -1,0 +1,26 @@
+name: CI & Deploy to QA
+
+on:
+  push:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        description: Name of DevX action
+        options:
+          - install
+          - force_install
+
+jobs:
+  ci:
+    name: Test & Build
+    secrets: inherit
+    uses: ./.github/workflows/pull-request-ci.yml
+
+  draft-release:
+    if: github.ref_name == 'master'
+    name: "Draft Release"
+    needs: [ ci ]
+    uses: careem/shared-workflows/.github/workflows/draft-release.yml@master

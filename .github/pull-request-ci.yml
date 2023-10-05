@@ -1,0 +1,14 @@
+name: PR CI
+on:
+  pull_request:
+    branches: ["master"]
+  # In urgent cases we allow to manually trigger this step
+  workflow_dispatch:
+  workflow_call:
+jobs:
+  ci:
+    uses: careem/shared-workflows/.github/workflows/mvn-java.yml@master
+    name: Test & Build
+    secrets: inherit
+    with:
+      java-version: ${{ vars.JAVA_VERSION }}

@@ -1,0 +1,15 @@
+name: Artifactory release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+env:
+  MAVEN_OPTS: ${{vars.MAVEN_OPTS}}
+
+jobs:
+  release-artifactory:
+    uses: careem/shared-workflows/.github/workflows/mvn-java-artifactory-release.yml@master
+    secrets: inherit
+    with:
+      java-version: 8
