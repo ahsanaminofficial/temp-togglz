@@ -14,3 +14,4 @@ Provide-Capability:
   osgi.serviceloader;osgi.serviceloader=org.togglz.core.spi.ActivationStrategy,
   osgi.serviceloader;osgi.serviceloader=org.togglz.core.spi.FeatureManagerProvider,
   osgi.serviceloader;osgi.serviceloader=org.togglz.core.spi.LogProvider
+Import-Package: com.careem.galileo.sdk;version="2.0.6",org.json.simple.parser;version="1.1.1"
