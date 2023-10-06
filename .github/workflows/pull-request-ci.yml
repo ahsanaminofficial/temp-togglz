@@ -7,8 +7,9 @@ on:
   workflow_call:
 jobs:
   ci:
-    uses: ./.github/workflows/java-config.yml
-    name: Test & Build
-    secrets: inherit
-    with:
-      java-version: ${{ vars.JAVA_VERSION }}
+    steps:
+      - name: Test & Build
+        uses: ./.github/workflows/java-config.yml
+        secrets: inherit
+        with:
+          java-version: ${{ vars.JAVA_VERSION }}
