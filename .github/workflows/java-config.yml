@@ -20,3 +20,9 @@ on:
         type: string
         description: |
           This variable contains parameters used to start up the JVM running Maven and can be used to supply additional options to it. E.g. JVM memory
+
+jobs:
+  config:
+    steps:
+      - name: "configs"
+        run: echo "Hello world!"
