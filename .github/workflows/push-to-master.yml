@@ -25,4 +25,6 @@ jobs:
     if: github.ref_name == 'master'
     name: "Draft Release"
     needs: [ ci ]
-    uses: careem/shared-workflows/.github/workflows/draft-release.yml@master
+    steps:
+      - name: "draft"
+        uses: careem/shared-workflows/.github/workflows/draft-release.yml@master
