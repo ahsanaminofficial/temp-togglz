@@ -17,7 +17,8 @@ jobs:
   ci:
     name: Test & Build
     secrets: inherit
-    uses: ./.github/workflows/pull-request-ci.yml
+    steps:
+      uses: ./.github/workflows/pull-request-ci.yml
 
   draft-release:
     if: github.ref_name == 'master'
