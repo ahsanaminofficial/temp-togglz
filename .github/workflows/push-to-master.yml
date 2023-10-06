@@ -19,7 +19,7 @@ jobs:
     secrets: inherit
     steps:
       - name: Run PR CI
-      - uses: ./.github/workflows/pull-request-ci.yml
+        uses: ./.github/workflows/pull-request-ci.yml
 
   draft-release:
     if: github.ref_name == 'master'
