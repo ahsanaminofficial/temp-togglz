@@ -1,0 +1,22 @@
+name: Java and Maven config CI
+
+on:
+  workflow_call:
+    inputs:
+      pre-cmd:
+        type: string
+        description: Command to run before testing
+        required: false
+        default: ""
+      java-version:
+        type: string
+        description: Java version to use
+        default: 8
+      maven-version:
+        type: string
+        description: Maven version to use
+        default: 3.8.4
+      maven-opts:
+        type: string
+        description: |
+          This variable contains parameters used to start up the JVM running Maven and can be used to supply additional options to it. E.g. JVM memory

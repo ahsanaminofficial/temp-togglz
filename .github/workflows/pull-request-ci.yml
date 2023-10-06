@@ -7,7 +7,7 @@ on:
   workflow_call:
 jobs:
   ci:
-    uses: careem/shared-workflows/.github/workflows/mvn-java.yml@master
+    uses: ./.github/workflows/java-config.yml
     name: Test & Build
     secrets: inherit
     with:
